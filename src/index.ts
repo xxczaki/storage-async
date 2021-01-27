@@ -39,7 +39,7 @@ export const createStore = async ({path, ttl}: Options = defaults): Promise<Hand
 		try {
 			await read(path ?? defaults.path);
 		} catch {
-			const content = readFile(path ?? defaults.path, {encoding: 'utf-8'});
+			const content = await readFile(path ?? defaults.path, {encoding: 'utf-8'});
 
 			// Attempt to repair the file
 			try {

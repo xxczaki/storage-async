@@ -1,6 +1,6 @@
 # Storage Async
 
-> Lightweight, asynchronous and atomic key-value JSON storage for Node.js applications. Supports TTL.
+> Lightweight, asynchronous, self-repairing, atomic, key-value JSON storage for Node.js applications. Supports TTL.
 
 [![Build Status](https://github.com/xxczaki/storage-async/workflows/CI/badge.svg)](https://github.com/xxczaki/storage-async/actions?query=workflow%3ACI)
 [![Coverage Status](https://coveralls.io/repos/github/xxczaki/storage-async/badge.svg?branch=master)](https://coveralls.io/github/xxczaki/storage-async?branch=master)
