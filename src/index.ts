@@ -20,9 +20,7 @@ interface Handlers {
 
 const defaults = {
 	path: join(__dirname, 'store.json'),
-	ttl: 900_000, // 15 minutes
-	selfRepair: true,
-	regenAfterFail: true
+	ttl: 900_000 // 15 minutes
 };
 
 /**
@@ -34,7 +32,7 @@ const defaults = {
  * @example
  * format(new Date(2014, 1, 11), '{yyyy}-{MM}-{dd}') //=> '2014-01-11'
  */
-export const createStore = async ({path, ttl, selfRepair, regenAfterFail}: Options = defaults): Promise<Handlers> => {
+export const createStore = async ({path, ttl}: Options = defaults): Promise<Handlers> => {
 	// Check if file already exists (flag wx)
 	try {
 		await writeFile(path ?? defaults.path, `{"__timestamp": ${Date.now()}, "__ttl": ${ttl ?? defaults.ttl}}`, {flag: 'wx'});
@@ -44,20 +42,12 @@ export const createStore = async ({path, ttl, selfRepair, regenAfterFail}: Optio
 			await read(path ?? defaults.path);
 		} catch {
 			const content = await readFile(path ?? defaults.path, {encoding: 'utf-8'});
-			let success: boolean | undefined;
 
 			// Attempt to repair the file
 			try {
-				if (selfRepair ?? true) {
-					await writeFile(path ?? defaults.path, repair(content));
-					success = true;
-				} else {
-					success = false;
-				}
-			} finally {
-				if (!success && (regenAfterFail ?? true)) {
-					await writeFile(path ?? defaults.path, `{"__timestamp": ${Date.now()}, "__ttl": ${ttl ?? defaults.ttl}}`);
-				}
+				await writeFile(path ?? defaults.path, repair(content));
+			} catch {
+				await writeFile(path ?? defaults.path, `{"__timestamp": ${Date.now()}, "__ttl": ${ttl ?? defaults.ttl}}`);
 			}
 		} finally {
 			const data = await read(path ?? defaults.path);
