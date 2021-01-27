@@ -1,7 +1,7 @@
 {
     "name": "storage-async",
-    "version": "0.0.3",
-    "description": "Lightweight, asynchronous and atomic key-value JSON storage for Node.js applications. Supports TTL.",
+    "version": "0.0.4",
+    "description": "Lightweight, asynchronous, self-repairing, atomic, key-value JSON storage for Node.js applications. Supports TTL.",
     "main": "dist/index.js",
     "module": "dist/index.esm.js",
     "types": "dist/index.d.ts",
@@ -79,6 +79,7 @@
         }
     },
     "dependencies": {
+        "jsonrepair": "^2.0.0",
         "load-json-file": "^6.2.0",
         "write-json-file": "^4.3.0"
     }

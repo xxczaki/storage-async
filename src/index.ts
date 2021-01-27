@@ -1,7 +1,8 @@
 import {join} from 'path';
-import {writeFile} from 'fs/promises';
+import {writeFile, readFile} from 'fs/promises';
 import write from 'write-json-file';
 import read from 'load-json-file';
+import repair from 'jsonrepair';
 
 interface Options {
 	path?: string;
@@ -30,13 +31,22 @@ const defaults = {
  * format(new Date(2014, 1, 11), '{yyyy}-{MM}-{dd}') //=> '2014-01-11'
  */
 export const createStore = async ({path, ttl}: Options = defaults): Promise<Handlers> => {
+	// Check if file already exists (flag wx)
 	try {
 		await writeFile(path ?? defaults.path, `{"__timestamp": ${Date.now()}, "__ttl": ${ttl ?? defaults.ttl}}`, {flag: 'wx'});
 	} catch {
+		// Check if the file corrupted
 		try {
 			await read(path ?? defaults.path);
 		} catch {
-			await writeFile(path ?? defaults.path, `{"__timestamp": ${Date.now()}, "__ttl": ${ttl ?? defaults.ttl}}`);
+			const content = readFile(path ?? defaults.path, {encoding: 'utf-8'});
+
+			// Attempt to repair the file
+			try {
+				await writeFile(path ?? defaults.path, repair(content));
+			} catch {
+				await writeFile(path ?? defaults.path, `{"__timestamp": ${Date.now()}, "__ttl": ${ttl ?? defaults.ttl}}`);
+			}
 		} finally {
 			const data = await read(path ?? defaults.path);
 
