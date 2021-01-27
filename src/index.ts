@@ -31,13 +31,21 @@ const defaults = {
  */
 export const createStore = async ({path, ttl}: Options = defaults): Promise<Handlers> => {
 	try {
-		await writeFile(path ?? defaults.path, `{"__timestamp": ${Date.now()}, "__ttl": ${ttl}}`, {flag: 'wx'});
+		await writeFile(path ?? defaults.path, `{"__timestamp": ${Date.now()}, "__ttl": ${ttl ?? defaults.ttl}}`, {flag: 'wx'});
 	} catch {
-		const data = await read(path ?? defaults.path);
+		try {
+			await read(path ?? defaults.path);
+		} catch {
+			await writeFile(path ?? defaults.path, `{"__timestamp": ${Date.now()}, "__ttl": ${ttl ?? defaults.ttl}}`);
+		} finally {
+			const data = await read(path ?? defaults.path);
 
-		// @ts-expect-error
-		if (Date.now() - data?.__timestamp > data?.__ttl) {
-			await writeFile(path ?? defaults.path, `{"__timestamp": ${Date.now()}, "__ttl": ${ttl}}`);
+			// @ts-expect-error
+			if (Date.now() - data?.__timestamp > data?.__ttl) {
+				await writeFile(path ?? defaults.path,
+					`{"__timestamp": ${Date.now()}, "__ttl": ${ttl ?? defaults.ttl}}`
+				);
+			}
 		}
 	}
 
