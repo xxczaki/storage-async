@@ -71,8 +71,9 @@ Storage options:
 
 ```ts
 interface Options {
-	path?: string;	// defaults to './store.json
-	ttl?: number;	// defaults to 900000ms (15 minutes)
+	path?: string;				// defaults to './store.json
+	ttl?: number;				// defaults to 900000ms (15 minutes)
+	resetOnFailure?: boolean;	// whether to reset the store if it couldn't be repaired
 }
 ```
 
