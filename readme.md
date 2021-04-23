@@ -34,7 +34,7 @@ import {createStore} from 'storage-async';
 (async () => {
 	const store = await createStore();
 
-	await store.set('name', 'John);
+	await store.set('name', 'John');
 	await store.set('age', 20);
 
 	await store.has('name'); //=> true

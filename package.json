@@ -1,23 +1,16 @@
 {
     "name": "storage-async",
-    "version": "0.0.8",
+    "version": "1.0.0",
     "description": "Lightweight, asynchronous, key-value JSON storage for Node.js applications. Supports TTL, atomic updates, self-repairing and more.",
     "main": "dist/index.js",
-    "module": "dist/index.esm.js",
-    "types": "dist/index.d.ts",
-    "files": [
-        "dist/**/*"
-    ],
+    "type": "module",
     "author": "Antoni Kepinski <a@kepinski.me> (https://kepinski.me)",
     "bugs": {
         "url": "https://github.com/xxczaki/storage-async/issues"
     },
     "scripts": {
         "prebuild": "del-cli dist",
-        "esm": "tsc --module esnext && cpy dist/index.js dist --rename index.esm.js",
-        "cjs": "tsc --module commonjs",
-        "build": "npm run esm && npm run cjs",
-        "size": "size-limit",
+        "build": "tsc",
         "test": "xo && c8 ava && c8 report --reporter=lcov",
         "benchmark": "ts-node -T benchmark.ts",
         "prepublishOnly": "npm run build"
